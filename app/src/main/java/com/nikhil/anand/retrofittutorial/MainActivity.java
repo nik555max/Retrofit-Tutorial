@@ -15,6 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     TextView postTextView;
+    JsonPlaceHolder jsonPlaceHolder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +25,44 @@ public class MainActivity extends AppCompatActivity {
 
         //create an instance of retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://jsonplaceholder.typicode.com/")
+                .baseUrl("https://newsapi.org/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        JsonPlaceHolder jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
+        jsonPlaceHolder = retrofit.create(JsonPlaceHolder.class);
+        //getPost();
+        getNews();
+    }
+
+    public void getNews(){
+        Call<News> news = jsonPlaceHolder.getNews("tesla", "0a5d17752d9f4ee29370cf0337956531");
+
+        news.enqueue(new Callback<News>() {
+            @Override
+            public void onResponse(Call<News> call, Response<News> response) {
+                News todaysNews = response.body();
+
+                String content ="";
+                List<Articles> articles = todaysNews.getArticles();
+                for (Articles a : articles){
+                   content += "Title : "+a.getTitle()+"\n"
+                           +"Description : "+a.getDescription()+
+                           "\nURL : "+a.getUrl()
+                           +"\nImage Url : "+a.getUrlToImage()
+                           +"\nPublished At : "+a.getPublishedAt()+"\n\n";
+                }
+                postTextView.setText(content);
+
+            }
+
+            @Override
+            public void onFailure(Call<News> call, Throwable t) {
+                postTextView.setText(t.getMessage());
+            }
+        });
+    }
+
+    public void getPost(){
 
         Call<List<Post>> call = jsonPlaceHolder.getPosts();
 
@@ -43,10 +77,8 @@ public class MainActivity extends AppCompatActivity {
 
                 for (Post post : posts){
                     String content = "";
-                    content += "User Id : "+post.getUserID()+"\n"
-                            +"Id : "+post.getId()+"\n"+
-                            "Title : "+post.getTitle()+"\n"+
-                            "Body : "+post.getBody()+"\n\n";
+                    content += "Updated : "+post.getUpdated()+"\n"
+                            +"Cases : "+post.getCases()+"\n"+"\n\n";
 
                     postTextView.append(content);
                 }

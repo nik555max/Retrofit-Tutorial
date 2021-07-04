@@ -1,24 +1,24 @@
 package com.nikhil.anand.retrofittutorial;
 public class Post {
-    private int userID;
-    private int id;
-    private String title;
-    private String body;
+    private long updated;
+    private int cases;
+//    private String title;
+//    private String body;
 
 
-    public int getUserID() {
-        return userID;
+    public long getUpdated() {
+        return updated;
     }
 
-    public int getId() {
-        return id;
+    public int getCases() {
+        return cases;
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getBody() {
-        return body;
-    }
+//
+//    public String getTitle() {
+//        return title;
+//    }
+//
+//    public String getBody() {
+//        return body;
+//    }
 }
